@@ -14,6 +14,7 @@ public class EnemyTank extends Tank implements Runnable{
     public void setEnemyTanks(Vector<EnemyTank> enemyTanks) {
         this.enemyTanks = enemyTanks;
     }
+
     //编写方法，判断该坦克是否和其他坦克发生碰撞
     public boolean isTouchEnemyTank(){
         switch (this.getDirect()){
@@ -194,7 +195,7 @@ public class EnemyTank extends Tank implements Runnable{
             switch (getDirect()) {
                 case 0:
                     for (int i = 0; i < 30; i++) {      //沿着这个方向走30步
-                        if (getY() >= 0 && !isTouchEnemyTank()) {
+                        if (getY() >= 0 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveUp();
                         }
                         try {
@@ -206,7 +207,7 @@ public class EnemyTank extends Tank implements Runnable{
                     break;
                 case 1:
                     for (int i = 0; i < 30; i++) {
-                        if (getX() + 60 <= 1000 && !isTouchEnemyTank()) {
+                        if (getX() + 60 <= 1000 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveRight();
                         }
                         try {
@@ -218,7 +219,7 @@ public class EnemyTank extends Tank implements Runnable{
                     break;
                 case 2:
                     for (int i = 0; i < 30; i++) {
-                        if (getY() + 60 <= 750 && !isTouchEnemyTank()) {
+                        if (getY() + 60 <= 750 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveDown();
                         }
                         try {
@@ -230,7 +231,7 @@ public class EnemyTank extends Tank implements Runnable{
                     break;
                 case 3:
                     for (int i = 0; i < 30; i++) {
-                        if (getX() >= 0 && !isTouchEnemyTank()) {
+                        if (getX() >= 0 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveLeft();
                         }
                         try {

@@ -12,20 +12,27 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     Vector<EnemyTank> enemyTanks = new Vector<>();
     Vector<Bomb> bombs = new Vector<>();
     Vector<Wall> walls = new Vector<>();
-    int enemyTankSize = 3;
-    Steel steel = null;
-//    Wall wall = null;
+    Vector<Steel> steels = new Vector<>();
+    Vector<River> rivers = new Vector<>();
+    int enemyTankSize = 5;
+
     Image image1 ;
     Image image2 ;
     Image image3 ;
     public MyPane(){
         hero = new Hero(500,500);//初始化自己的坦克
         hero.setEnemyTanks(enemyTanks);
+        hero.setWalls(walls);
+        hero.setSteels(steels);
+        hero.setRivers(rivers);
         hero.setSpeed(10);
-        for (int i = 1; i < enemyTankSize+1; i++) {
+        for (int i = 1; i < enemyTankSize+1; i++) {     //初始化敌人的坦克
             EnemyTank enemyTank = new EnemyTank(100*i,0);
             //将 enemyTanks 设置给 enemyTank
             enemyTank.setEnemyTanks(enemyTanks);
+            enemyTank.setWalls(walls);
+            enemyTank.setSteels(steels);
+            enemyTank.setRivers(rivers);
             enemyTank.setDirect(2);
             new Thread(enemyTank).start();
             Shot shot = new Shot(enemyTank.getX() + 20, enemyTank.getY() + 60, enemyTank.getDirect());
@@ -33,11 +40,19 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             new Thread(shot).start();
             enemyTanks.add(enemyTank);
         }
-        steel = new Steel(0,250,180,60);
-        for(int i = 0;i<3;i++){
-            Wall wall = new Wall(240+(i*60),250,60,60);
+        for(int i = 0;i<5;i++){     //初始化所有的墙
+            Wall wall = new Wall(240+(i*60),120,60,60);
             walls.add(wall);
         }
+        for(int i =0;i<3;i++){      //初始化所有的钢板
+            Steel steel = new Steel(0+(i*60),120,60,60);
+            steels.add(steel);
+        }
+        for(int i=0;i<2;i++){
+            River river = new River(0+(i*60),310,60,60);
+            rivers.add(river);
+        }
+
 
 //        image1 = Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("D:\\IDEA\\IDEA FOLDER\\Tankgame\\out\\production\\Tankgame\\b1.gif"));
 //        image2 = Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("D:\\IDEA\\IDEA FOLDER\\Tankgame\\out\\production\\Tankgame\\b2.gif"));
@@ -49,9 +64,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     public void paint(Graphics g) {
         super.paint(g);
         g.fillRect(0,0,1000,750);//填充矩形，默认黑色        在我的电脑上高度是713才和窗口一样大
-        drawSteel(steel.getX(), steel.getY(), steel.getWidth(), steel.getHeight(),g);
-        drawRiver(180,250,60,60,g);
-        for(int i = 0;i<walls.size();i++){
+        for(int i = 0;i<walls.size();i++){      //画出所有的墙
             Wall wall = walls.get(i);
             if(wall.islive) {
                 drawWall(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), g);
@@ -59,7 +72,14 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 walls.remove(wall);
             }
         }
-
+        for(int i = 0;i<steels.size();i++){     //画出所有的钢板
+            Steel steel=steels.get(i);
+            drawSteel(steel.getX(),steel.getY(),steel.getWidth(),steel.getHeight(),g);
+        }
+        for(int i=0;i<rivers.size();i++){       //画出所有的河
+            River river = rivers.get(i);
+            drawRiver(river.getX(),river.getY(),river.getWidth(),river.getHeight(),g);
+        }
         if (hero != null && hero.islive) {
             drawTank(hero.getX(), hero.getY(), g, hero.getDirect(), 0);
         }
@@ -191,26 +211,29 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     }
 
     public void hitSteel(){
-        Steel steel1 = steel;
-        for(int i=0;i<enemyTanks.size();i++){       //若是敌人打钢板
-            EnemyTank enemyTank = enemyTanks.get(i);
-            for (int j = 0; j < enemyTank.shots.size(); j++) {
-                Shot s = enemyTank.shots.get(j);
-                if (s.x > steel1.getX() && s.x < steel1.getX() + steel1.getWidth()
-                        && s.y > steel1.getY() && s.y < steel1.getY() + steel1.getHeight()) {
-                    s.islive = false;
+        for(int stl=0;stl<steels.size();stl++){
+            Steel steel = steels.get(stl);
+            for(int i=0;i<enemyTanks.size();i++){       //若是敌人打钢板
+                EnemyTank enemyTank = enemyTanks.get(i);
+                for (int j = 0; j < enemyTank.shots.size(); j++) {
+                    Shot s = enemyTank.shots.get(j);
+                    if (s.x >= steel.getX() && s.x <= steel.getX() + steel.getWidth()
+                            && s.y >= steel.getY() && s.y <= steel.getY() + steel.getHeight()) {
+                        s.islive = false;
+                    }
+                }
+            }
+            for(int i =0;i<hero.shots.size();i++) {     //若是玩家打钢板
+                Shot s = hero.shots.get(i);
+                if (s.islive) {
+                    if (s.x >= steel.getX() && s.x <= steel.getX() + steel.getWidth()
+                            && s.y >= steel.getY() && s.y <= steel.getY() + steel.getHeight()) {
+                        s.islive = false;
+                    }
                 }
             }
         }
-        for(int i =0;i<hero.shots.size();i++) {     //若是玩家打钢板
-            Shot s = hero.shots.get(i);
-            if (s.islive) {
-                if (s.x > steel1.getX() && s.x < steel1.getX() + steel1.getWidth()
-                        && s.y > steel1.getY() && s.y < steel1.getY() + steel1.getHeight()) {
-                    s.islive = false;
-                }
-            }
-        }
+
     }
     public void hitWall(){
         for(int w = 0;w<walls.size();w++){
@@ -219,8 +242,8 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 EnemyTank enemyTank = enemyTanks.get(i);
                 for (int j = 0; j < enemyTank.shots.size(); j++) {
                     Shot s = enemyTank.shots.get(j);
-                    if (s.x > wall.getX() && s.x < wall.getX() + wall.getWidth()
-                            && s.y > wall.getY() && s.y < wall.getY() + wall.getHeight()) {
+                    if (s.x >= wall.getX() && s.x <= wall.getX() + wall.getWidth()
+                            && s.y >= wall.getY() && s.y <= wall.getY() + wall.getHeight()) {
                         s.islive = false;
                         wall.islive = false;
                     }
@@ -229,8 +252,8 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             for(int i =0;i<hero.shots.size();i++) {     //若是玩家打墙
                 Shot s = hero.shots.get(i);
                 if (s.islive) {
-                    if (s.x > wall.getX() && s.x < wall.getX() + wall.getWidth()
-                            && s.y > wall.getY() && s.y < wall.getY() + wall.getHeight()) {
+                    if (s.x >= wall.getX() && s.x <= wall.getX() + wall.getWidth()
+                            && s.y >= wall.getY() && s.y <= wall.getY() + wall.getHeight()) {
                         s.islive = false;
                         wall.islive = false;
                     }
@@ -275,22 +298,22 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
         if(hero.islive == false)return;
         if (e.getKeyCode() == KeyEvent.VK_W){
             hero.setDirect(0);
-            if (hero.getY() > 0 && !hero.isTouchEnemyTank()) {
+            if (hero.getY() > 0 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
                 hero.moveUp();
             }
         }else if (e.getKeyCode() == KeyEvent.VK_D){
             hero.setDirect(1);
-            if (hero.getX()+60 <1000 && !hero.isTouchEnemyTank()) {
+            if (hero.getX()+60 <1000 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
                 hero.moveRight();
             }
         }else if (e.getKeyCode() == KeyEvent.VK_S){
             hero.setDirect(2);
-            if (hero.getY() + 100 < 750 && !hero.isTouchEnemyTank()) {
+            if (hero.getY() + 100 < 750 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
                 hero.moveDown();
             }
         }else if (e.getKeyCode() == KeyEvent.VK_A){
             hero.setDirect(3);
-            if (hero.getX() > 0 && !hero.isTouchEnemyTank()) {
+            if (hero.getX() > 0 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
                 hero.moveLeft();
             }
         }
