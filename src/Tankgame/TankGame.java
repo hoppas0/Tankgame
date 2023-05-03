@@ -5,6 +5,7 @@ import javax.swing.*;
 public class TankGame extends JFrame {
     /*
     运行这个文件开始游戏
+    输入法切换成英文输入法
     WASD控制坦克移动，J发射炮弹
      */
 

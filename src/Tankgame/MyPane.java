@@ -41,7 +41,22 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             enemyTanks.add(enemyTank);
         }
         for(int i = 0;i<10;i++){     //初始化所有的墙
-            if(i>=4 && i<=6)continue;
+            if(i==4 || i==6)continue;
+            if(i == 5){
+                Wall wall0 = new Wall(70*2,70*(i+1),70,70);
+                walls.add(wall0);
+                Wall wall1 = new Wall(70*3,70*(i+1),70,70);
+                walls.add(wall1);
+                Wall wall2 = new Wall(70*5,70*(i+1),70,70);
+                walls.add(wall2);
+                Wall wall3 = new Wall(70*7,70*(i+1),70,70);
+                walls.add(wall3);
+                Wall wall4 = new Wall(70*9,70*(i+1),70,70);
+                walls.add(wall4);
+                Wall wall5 = new Wall(70*10,70*(i+1),70,70);
+                walls.add(wall5);
+                continue;
+            }
             Wall wall0 = new Wall(70*1,70*(i+1),70,70);
             walls.add(wall0);
             Wall wall1 = new Wall(70*3,70*(i+1),70,70);
