@@ -20,14 +20,14 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     Image image2 ;
     Image image3 ;
     public MyPane(){
-        hero = new Hero(500,500);//初始化自己的坦克
+        hero = new Hero(5+(70*6),5+70*11);//初始化自己的坦克
         hero.setEnemyTanks(enemyTanks);
         hero.setWalls(walls);
         hero.setSteels(steels);
         hero.setRivers(rivers);
-        hero.setSpeed(10);
+        hero.setSpeed(5);
         for (int i = 1; i < enemyTankSize+1; i++) {     //初始化敌人的坦克
-            EnemyTank enemyTank = new EnemyTank(100*i,0);
+            EnemyTank enemyTank = new EnemyTank(5+(i*140),0);
             //将 enemyTanks 设置给 enemyTank
             enemyTank.setEnemyTanks(enemyTanks);
             enemyTank.setWalls(walls);
@@ -40,16 +40,33 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             new Thread(shot).start();
             enemyTanks.add(enemyTank);
         }
-        for(int i = 0;i<5;i++){     //初始化所有的墙
-            Wall wall = new Wall(240+(i*60),120,60,60);
-            walls.add(wall);
+        for(int i = 0;i<10;i++){     //初始化所有的墙
+            if(i>=4 && i<=6)continue;
+            Wall wall0 = new Wall(70*1,70*(i+1),70,70);
+            walls.add(wall0);
+            Wall wall1 = new Wall(70*3,70*(i+1),70,70);
+            walls.add(wall1);
+            Wall wall2 = new Wall(70*5,70*(i+1),70,70);
+            walls.add(wall2);
+            Wall wall3 = new Wall(70*7,70*(i+1),70,70);
+            walls.add(wall3);
+            Wall wall4 = new Wall(70*9,70*(i+1),70,70);
+            walls.add(wall4);
+            Wall wall5 = new Wall(70*11,70*(i+1),70,70);
+            walls.add(wall5);
         }
         for(int i =0;i<3;i++){      //初始化所有的钢板
-            Steel steel = new Steel(0+(i*60),120,60,60);
-            steels.add(steel);
+            Steel steel0 = new Steel(70*6,70*3,70,70);
+            steels.add(steel0);
+            Steel steel1 = new Steel(0,70*6,70,70);
+            steels.add(steel1);
+            Steel steel2 = new Steel(70*12,70*6,70,70);
+            steels.add(steel2);
+            Steel steel3 = new Steel(70*6,70*8,70,70);
+            steels.add(steel3);
         }
-        for(int i=0;i<2;i++){
-            River river = new River(0+(i*60),310,60,60);
+        for(int i=0;i<0;i++){
+            River river = new River(70,70,70,70);
             rivers.add(river);
         }
 
@@ -63,7 +80,31 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.fillRect(0,0,1000,750);//填充矩形，默认黑色        在我的电脑上高度是713才和窗口一样大
+        g.fillRect(0,0,910,910);//填充矩形，默认黑色,把70*70看作一个基本的单元，所以长和宽要设置成能够整除70的数,910*910能放13*13个单元
+        if(hero.islive==false){         //如果玩家死亡
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Font font = new Font("Serif", Font.PLAIN, 56);
+            g.setFont(font);
+            g.setColor(Color.red);
+            g.drawString("DEFEAT",70*4,70*4);
+            return;
+        }
+        if(enemyTanks.size()==0){       //如果敌人全部被消灭
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Font font = new Font("Serif", Font.PLAIN, 56);
+            g.setFont(font);
+            g.setColor(Color.red);
+            g.drawString("VICTORY",70*4,70*4);
+            return;
+        }
         for(int i = 0;i<walls.size();i++){      //画出所有的墙
             Wall wall = walls.get(i);
             if(wall.islive) {
@@ -205,9 +246,6 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 }
             }
         }
-        if (hero.islive == false){
-            System.out.println("game over");
-        }
     }
 
     public void hitSteel(){
@@ -303,12 +341,12 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }else if (e.getKeyCode() == KeyEvent.VK_D){
             hero.setDirect(1);
-            if (hero.getX()+60 <1000 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
+            if (hero.getX()+60 < 70*13 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
                 hero.moveRight();
             }
         }else if (e.getKeyCode() == KeyEvent.VK_S){
             hero.setDirect(2);
-            if (hero.getY() + 100 < 750 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
+            if (hero.getY() + 60 < 70*13 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
                 hero.moveDown();
             }
         }else if (e.getKeyCode() == KeyEvent.VK_A){
@@ -341,9 +379,9 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             hitHero();
             hitSteel();
             hitWall();
-            if(hero.islive==false) {
-                return;
-            }
+//            if(hero.islive==false) {
+//                return;
+//            }
         }
     }
 }

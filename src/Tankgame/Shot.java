@@ -35,7 +35,7 @@ public class Shot implements Runnable{
                     x -= speed;
                     break;
             }
-            if (!(x >= 0 && x <= 1000  && y >= 0 && y<=750 && islive)){
+            if (!(x >= 0 && x <= 1000  && y >= 0 && y<=1000 && islive)){
                 islive = false;
                 break;
             }
