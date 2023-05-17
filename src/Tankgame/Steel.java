@@ -1,11 +1,22 @@
 package Tankgame;
 
+import java.awt.*;
+
 public class Steel {
     private int X;
     private int Y;
+    private Image mimage;
     private int Width;
     private int Height;
+    public Steel(Image image,int x, int y, int width, int height){
+        mimage=image;
+        X=x;
+        Y=y;
+        Width=width;
+        Height=height;
+    }
     public Steel(int x, int y, int width, int height){
+        mimage=Toolkit.getDefaultToolkit().getImage("images/steel.png");;
         X=x;
         Y=y;
         Width=width;
@@ -36,6 +47,9 @@ public class Steel {
         return Y;
     }
 
+    public Image getImage(){
+        return mimage;
+    }
     public int getWidth() {
         return Width;
     }

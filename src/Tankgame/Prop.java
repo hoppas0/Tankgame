@@ -2,24 +2,29 @@ package Tankgame;
 
 import java.awt.*;
 
-public class Wall {
+/**
+ * 道具
+ * 50% 概率减速
+ * 50% 消灭一半敌人
+ */
+public class Prop {
     private int X;
     private int Y;
-    private Image mimage;;
+    private Image mimage;
     private int Width;
     private int Height;
 
     boolean islive = true;
 
-    public Wall(Image image,int x, int y, int width, int height) {
+    public Prop(Image image,int x, int y, int width, int height) {
         mimage=image;
         X = x;
         Y = y;
         Width = width;
         Height = height;
     }
-    public Wall(int x, int y, int width, int height) {
-        mimage=Toolkit.getDefaultToolkit().getImage("images/walls.gif");;
+    public Prop(int x, int y, int width, int height) {
+        mimage=Toolkit.getDefaultToolkit().getImage("images/img.png");
         X = x;
         Y = y;
         Width = width;

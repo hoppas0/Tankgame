@@ -2,24 +2,27 @@ package Tankgame;
 
 import java.awt.*;
 
-public class Wall {
+/**
+ * 基地，被敌人攻击则游戏失败
+ */
+public class Base {
     private int X;
     private int Y;
-    private Image mimage;;
+    private Image mimage;
     private int Width;
     private int Height;
 
     boolean islive = true;
 
-    public Wall(Image image,int x, int y, int width, int height) {
+    public Base(Image image,int x, int y, int width, int height) {
         mimage=image;
         X = x;
         Y = y;
         Width = width;
         Height = height;
     }
-    public Wall(int x, int y, int width, int height) {
-        mimage=Toolkit.getDefaultToolkit().getImage("images/walls.gif");;
+    public Base(int x, int y, int width, int height) {
+        mimage=Toolkit.getDefaultToolkit().getImage("images/star.gif");
         X = x;
         Y = y;
         Width = width;

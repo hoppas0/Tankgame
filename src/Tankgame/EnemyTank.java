@@ -195,6 +195,14 @@ public class EnemyTank extends Tank implements Runnable{
             switch (getDirect()) {
                 case 0:
                     for (int i = 0; i < 30; i++) {      //沿着这个方向走30步
+                        if(this.getSpeed()==1){
+                            try {
+                                Thread.sleep(10000);
+                                setSpeed(2);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         if (getY() > 0 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveUp();
                         }
@@ -207,6 +215,14 @@ public class EnemyTank extends Tank implements Runnable{
                     break;
                 case 1:
                     for (int i = 0; i < 30; i++) {
+                        if(this.getSpeed()==1){
+                            try {
+                                Thread.sleep(10000);
+                                setSpeed(2);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         if (getX() + 60 < 70*13 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveRight();
                         }
@@ -219,6 +235,14 @@ public class EnemyTank extends Tank implements Runnable{
                     break;
                 case 2:
                     for (int i = 0; i < 50; i++) {          //为了让敌方坦克更靠近我方坦克，所以让它向下走的更多一些
+                        if(this.getSpeed()==1){
+                            try {
+                                Thread.sleep(10000);
+                                setSpeed(2);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         if (getY() + 60 < 70*13 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveDown();
                         }
@@ -231,6 +255,14 @@ public class EnemyTank extends Tank implements Runnable{
                     break;
                 case 3:
                     for (int i = 0; i < 30; i++) {
+                        if(this.getSpeed()==1){
+                            try {
+                                Thread.sleep(10000);
+                                setSpeed(2);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         if (getX() > 0 && !isTouchEnemyTank() && !isTouchBuilding()) {
                             moveLeft();
                         }

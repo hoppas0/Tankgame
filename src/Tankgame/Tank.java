@@ -6,7 +6,7 @@ public class Tank {
     private int X;
     private int Y;
     private int direct;
-    private int speed = 1;
+    private int speed = 2;
     boolean islive = true;
     Vector<Wall> walls = new Vector<>();
     Vector<Steel> steels = new Vector<>();

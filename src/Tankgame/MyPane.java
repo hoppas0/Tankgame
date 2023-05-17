@@ -5,200 +5,82 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 import java.util.Vector;
 @SuppressWarnings("all")
 public class MyPane extends JPanel implements KeyListener ,Runnable{
+    private GameEndListener gameEndListener;
     Hero hero = null;
     Vector<EnemyTank> enemyTanks = new Vector<>();
     Vector<Bomb> bombs = new Vector<>();
     Vector<Wall> walls = new Vector<>();
     Vector<Steel> steels = new Vector<>();
     Vector<River> rivers = new Vector<>();
+    Vector<Base> bases = new Vector<>();
+    Vector<Prop> props = new Vector<>();
     int enemyTankSize = 5;
-
-    Image image1 ;
-    Image image2 ;
-    Image image3 ;
+    Image image1=Toolkit.getDefaultToolkit().getImage("images/b1.gif");
+    Image image2 = Toolkit.getDefaultToolkit().getImage("images/b2.gif");
+    Image image3 = Toolkit.getDefaultToolkit().getImage("images/b3.gif");
     public MyPane(){
-        hero = new Hero(5+(70*6),5+70*11);//初始化自己的坦克
-        hero.setEnemyTanks(enemyTanks);
-        hero.setWalls(walls);
-        hero.setSteels(steels);
-        hero.setRivers(rivers);
-        hero.setSpeed(5);
-        for (int i = 1; i < enemyTankSize+1; i++) {     //初始化敌人的坦克
-            EnemyTank enemyTank = new EnemyTank(5+(i*140),0);
-            //将 enemyTanks 设置给 enemyTank
-            enemyTank.setEnemyTanks(enemyTanks);
-            enemyTank.setWalls(walls);
-            enemyTank.setSteels(steels);
-            enemyTank.setRivers(rivers);
-            enemyTank.setDirect(2);
-            new Thread(enemyTank).start();
-            Shot shot = new Shot(enemyTank.getX() + 20, enemyTank.getY() + 60, enemyTank.getDirect());
-            enemyTank.shots.add(shot);
-            new Thread(shot).start();
-            enemyTanks.add(enemyTank);
-        }
-        for(int i = 0;i<10;i++){     //初始化所有的墙
-            if(i==4 || i==6)continue;
-            if(i == 5){
-                Wall wall0 = new Wall(70*2,70*(i+1),70,70);
-                walls.add(wall0);
-                Wall wall1 = new Wall(70*3,70*(i+1),70,70);
-                walls.add(wall1);
-                Wall wall2 = new Wall(70*5,70*(i+1),70,70);
-                walls.add(wall2);
-                Wall wall3 = new Wall(70*7,70*(i+1),70,70);
-                walls.add(wall3);
-                Wall wall4 = new Wall(70*9,70*(i+1),70,70);
-                walls.add(wall4);
-                Wall wall5 = new Wall(70*10,70*(i+1),70,70);
-                walls.add(wall5);
-                continue;
-            }
-            Wall wall0 = new Wall(70*1,70*(i+1),70,70);
-            walls.add(wall0);
-            Wall wall1 = new Wall(70*3,70*(i+1),70,70);
-            walls.add(wall1);
-            Wall wall2 = new Wall(70*5,70*(i+1),70,70);
-            walls.add(wall2);
-            Wall wall3 = new Wall(70*7,70*(i+1),70,70);
-            walls.add(wall3);
-            Wall wall4 = new Wall(70*9,70*(i+1),70,70);
-            walls.add(wall4);
-            Wall wall5 = new Wall(70*11,70*(i+1),70,70);
-            walls.add(wall5);
-        }
-        for(int i =0;i<3;i++){      //初始化所有的钢板
-            Steel steel0 = new Steel(70*6,70*3,70,70);
-            steels.add(steel0);
-            Steel steel1 = new Steel(0,70*6,70,70);
-            steels.add(steel1);
-            Steel steel2 = new Steel(70*12,70*6,70,70);
-            steels.add(steel2);
-            Steel steel3 = new Steel(70*6,70*8,70,70);
-            steels.add(steel3);
-        }
-        for(int i=0;i<0;i++){
-            River river = new River(70,70,70,70);
-            rivers.add(river);
-        }
-
-
-//        image1 = Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("D:\\IDEA\\IDEA FOLDER\\Tankgame\\out\\production\\Tankgame\\b1.gif"));
-//        image2 = Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("D:\\IDEA\\IDEA FOLDER\\Tankgame\\out\\production\\Tankgame\\b2.gif"));
-//        image3 = Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("D:\\IDEA\\IDEA FOLDER\\Tankgame\\out\\production\\Tankgame\\b3.gif"));
     }
-
-
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.fillRect(0,0,910,910);//填充矩形，默认黑色,把70*70看作一个基本的单元，所以长和宽要设置成能够整除70的数,910*910能放13*13个单元
-        if(hero.islive==false){         //如果玩家死亡
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    }
+
+    public void drawBase(Image image,int X, int Y, int width, int height, Graphics g){
+        g.drawImage(image,X,Y,width,height,null);
+    }
+    public void drawProp(Image image,int X, int Y, int width, int height, Graphics g){
+        g.drawImage(image,X,Y,width,height,null);
+    }
+    public void drawProps(Vector<Prop> props,Graphics g){
+        if(props.size()>0){
+            Prop prop=props.get(0);
+            if(prop.islive){
+                drawProp(prop.getImage(),prop.getX(),prop.getY(),prop.getWidth(),prop.getHeight(),g);
+            }else{
+                props.remove(prop);
             }
-            Font font = new Font("Serif", Font.PLAIN, 56);
-            g.setFont(font);
-            g.setColor(Color.red);
-            g.drawString("DEFEAT",70*4,70*4);
-            return;
         }
-        if(enemyTanks.size()==0){       //如果敌人全部被消灭
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Font font = new Font("Serif", Font.PLAIN, 56);
-            g.setFont(font);
-            g.setColor(Color.red);
-            g.drawString("VICTORY",70*4,70*4);
-            return;
-        }
+    }
+
+    public void drawWall(Image image,int X, int Y, int width, int height, Graphics g){
+        g.drawImage(image,X,Y,width,height,null);
+    }
+    public void drawWalls(Vector<Wall> walls,Graphics g){
         for(int i = 0;i<walls.size();i++){      //画出所有的墙
             Wall wall = walls.get(i);
             if(wall.islive) {
-                drawWall(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), g);
+                drawWall(wall.getImage(),wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight(), g);
             }else {
                 walls.remove(wall);
             }
         }
+    }
+    public void drawSteel(Image image,int X, int Y, int width, int height, Graphics g){
+        g.drawImage(image,X,Y,width,height,null);
+    }
+    public void drawSteels(Vector<Steel> steels,Graphics g){
         for(int i = 0;i<steels.size();i++){     //画出所有的钢板
             Steel steel=steels.get(i);
-            drawSteel(steel.getX(),steel.getY(),steel.getWidth(),steel.getHeight(),g);
+            drawSteel(steel.getImage(),steel.getX(),steel.getY(),steel.getWidth(),steel.getHeight(),g);
         }
-        for(int i=0;i<rivers.size();i++){       //画出所有的河
-            River river = rivers.get(i);
-            drawRiver(river.getX(),river.getY(),river.getWidth(),river.getHeight(),g);
-        }
-        if (hero != null && hero.islive) {
-            drawTank(hero.getX(), hero.getY(), g, hero.getDirect(), 0);
-        }
-//        if (hero.shot != null && hero.shot.islive == true ){
-//            g.fill3DRect(hero.shot.x,hero.shot.y,2,2,false);
-//        }
-        for (int i = 0; i < hero.shots.size(); i++) {
-            Shot shot = hero.shots.get(i);
-            if (shot != null && shot.islive == true){
-                g.draw3DRect(shot.x,shot.y, 2,2,false);
-            }else{
-                hero.shots.remove(shot);        //这里会把死掉的炮弹移除掉
-            }
-        }
-
-
-        //画出爆炸效果
-        for (int i = 0; i < bombs.size(); i++) {
-            Bomb bomb = bombs.get(i);
-            if (bomb.life > 6){
-                g.drawImage(image1,bomb.x,bomb.y,60,60,this);
-            }else if (bomb.life > 3){
-                g.drawImage(image2,bomb.x,bomb.y,60,60,this);
-            }else{
-                g.drawImage(image3,bomb.x,bomb.y,60,60,this);
-            }
-            bomb.lifeDown();
-            if (bomb.life == 0){
-                bombs.remove(bomb);
-            }
-        }
-        for (int i = 0; i < enemyTanks.size(); i++) {
-            EnemyTank enemyTank = enemyTanks.get(i);
-            if (enemyTank.islive) {
-                drawTank(enemyTank.getX(),enemyTank.getY(),g,enemyTank.getDirect(),1);
-                for (int j = 0; j < enemyTank.shots.size(); j++) {
-                    Shot shot = enemyTank.shots.get(j);
-                    if (shot.islive){
-                        g.draw3DRect(shot.x,shot.y,2,2,false);
-                    }else{
-                        enemyTank.shots.remove(shot);
-                    }
-                }
-            }
-        }
-    }
-
-    public void drawWall(int X, int Y, int width, int height, Graphics g){
-        g.setColor(Color.RED);
-        g.fill3DRect(X, Y,width,height,false);
-    }
-    public void drawSteel(int X, int Y, int width, int height, Graphics g){
-        g.setColor(Color.WHITE);
-        g.fill3DRect(X, Y,width,height,false);
     }
 
     public void drawRiver(int X,int Y,int width,int height,Graphics g){
         g.setColor(Color.BLUE);
         g.fill3DRect(X, Y,width,height,false);
     }
+    public void drawRivers(Vector<River> rivers,Graphics g){
+        for(int i=0;i<rivers.size();i++){       //画出所有的河
+            River river = rivers.get(i);
+            drawRiver(river.getX(),river.getY(),river.getWidth(),river.getHeight(),g);
+        }
+    }
 
     public void drawTank(int X,int Y,Graphics g,int direct,int type){
-
         switch (type){
             case 0:
                 g.setColor(Color.CYAN);
@@ -240,30 +122,116 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 System.out.println("暂时没有处理 ");
         }
     }
-    public void hitEnemyTank(){
+    public void drawHero(Hero hero,Graphics g){
+        if (hero != null && hero.islive) {      //画出玩家
+            drawTank(hero.getX(), hero.getY(), g, hero.getDirect(), 0);
+        }
+        for (int i = 0; i < hero.shots.size(); i++) {       //画出玩家的炮弹
+            Shot shot = hero.shots.get(i);
+            if (shot != null && shot.islive == true){
+                g.draw3DRect(shot.x,shot.y, 2,2,false);
+            }else{
+                hero.shots.remove(shot);        //这里会把死掉的炮弹移除掉
+            }
+        }
+    }
+    public void drawEnemyTanks(Vector<EnemyTank> enemyTanks,Graphics g){
+        for (int i = 0; i < enemyTanks.size(); i++) {
+            EnemyTank enemyTank = enemyTanks.get(i);
+            if (enemyTank.islive) {
+                drawTank(enemyTank.getX(),enemyTank.getY(),g,enemyTank.getDirect(),1);
+                for (int j = 0; j < enemyTank.shots.size(); j++) {
+                    Shot shot = enemyTank.shots.get(j);
+                    if (shot.islive){
+                        g.draw3DRect(shot.x,shot.y,2,2,false);
+                    }else{
+                        enemyTank.shots.remove(shot);
+                    }
+                }
+            }
+        }
+    }
+    public void drawBombs(Vector<Bomb> bombs,Graphics g){
+        for (int i = 0; i < bombs.size(); i++) {
+            Bomb bomb = bombs.get(i);
+            if (bomb.life > 6){
+                g.drawImage(image1,bomb.x,bomb.y,60,60,this);
+            }else if (bomb.life > 3){
+                g.drawImage(image2,bomb.x,bomb.y,60,60,this);
+            }else{
+                g.drawImage(image3,bomb.x,bomb.y,60,60,this);
+            }
+            bomb.lifeDown();
+            if (bomb.life == 0){
+                bombs.remove(bomb);
+            }
+        }
+    }
+    public void hitEnemyTank(Vector<Bomb> bombs,Hero hero,Vector<EnemyTank> enemyTanks){
         for(int i =0;i<hero.shots.size();i++) {
             Shot shot = hero.shots.get(i);
             if (shot.islive) {
                 for (int j = 0; j < enemyTanks.size(); j++) {
                     EnemyTank enemyTank = enemyTanks.get(j);
-                    hitTank(shot, enemyTank);
+                    hitTank(bombs,shot, enemyTank,enemyTanks);
                 }
             }
         }
     }
-    public void hitHero(){
+    public void hitHero(Vector<Bomb> bombs,Hero hero,Vector<EnemyTank> enemyTanks){
         for (int i = 0; i < enemyTanks.size(); i++) {
             EnemyTank enemyTank = enemyTanks.get(i);
             for (int j = 0; j < enemyTank.shots.size(); j++) {
                 Shot shot = enemyTank.shots.get(j);
                 if (hero.islive && shot.islive){
-                    hitTank(shot,hero);
+                    hitTank(bombs,shot,hero,enemyTanks);
+                }
+            }
+        }
+    }
+    public void hitTank(Vector<Bomb> bombs,Shot s,Tank enemyTank,Vector<EnemyTank> enemyTanks){
+        switch (enemyTank.getDirect()){
+            case 0:
+            case 2:
+                if (s.x > enemyTank.getX() && s.x < enemyTank.getX() +40
+                        && s.y > enemyTank.getY() && s.y < enemyTank.getY() +60){
+                    s.islive = false;
+                    enemyTank.islive = false;
+                    enemyTanks.remove(enemyTank);
+                    Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
+                    bombs.add(bomb);
+                }
+                break;
+            case 1:
+            case 3:
+                if (s.x > enemyTank.getX() && s.x < enemyTank.getX() +60
+                        && s.y > enemyTank.getY() && s.y < enemyTank.getY() +40){
+                    s.islive = false;
+                    enemyTank.islive = false;
+                    enemyTanks.remove(enemyTank);
+                    Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
+                    bombs.add(bomb);
+                }
+                break;
+        }
+    }
+    public void hitbase(Vector<Base> bases,Hero hero,Vector<EnemyTank> enemyTanks){
+        for(int ba=0;ba<bases.size();ba++){
+            Base base = bases.get(ba);
+            for(int i=0;i<enemyTanks.size();i++){       //若是敌人打基地
+                EnemyTank enemyTank = enemyTanks.get(i);
+                for (int j = 0; j < enemyTank.shots.size(); j++) {
+                    Shot s = enemyTank.shots.get(j);
+                    if (s.x >= base.getX() && s.x <= base.getX() + base.getWidth()
+                            && s.y >= base.getY() && s.y <= base.getY() + base.getHeight()) {
+                        hero.islive=false;
+                    }
                 }
             }
         }
     }
 
-    public void hitSteel(){
+    public void hitSteel(Vector<Steel> steels,Hero hero,Vector<EnemyTank> enemyTanks){
         for(int stl=0;stl<steels.size();stl++){
             Steel steel = steels.get(stl);
             for(int i=0;i<enemyTanks.size();i++){       //若是敌人打钢板
@@ -286,9 +254,8 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 }
             }
         }
-
     }
-    public void hitWall(){
+    public void hitWall(Vector<Wall> walls,Hero hero,Vector<EnemyTank> enemyTanks){
         for(int w = 0;w<walls.size();w++){
             Wall wall = walls.get(w);
             for(int i=0;i<enemyTanks.size();i++){       //若是敌人打墙
@@ -314,30 +281,36 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void hitTank(Shot s,Tank enemyTank){
-        switch (enemyTank.getDirect()){
-            case 0:
-            case 2:
-                if (s.x > enemyTank.getX() && s.x < enemyTank.getX() +40
-                && s.y > enemyTank.getY() && s.y < enemyTank.getY() +60){
-                    s.islive = false;
-                    enemyTank.islive = false;
-                    enemyTanks.remove(enemyTank);
-                    Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
-                    bombs.add(bomb);
+    public void getprop(Vector<Prop> props,Vector<Bomb> bombs,Hero hero,Vector<EnemyTank> enemyTanks){
+        if(props.size()>0){
+            Tank s=hero;
+            Prop prop=props.get(0);
+            if (s.getX() >= prop.getX() && s.getX() <= prop.getX() + prop.getWidth()
+                    && s.getY() >= prop.getY() && s.getY()<= prop.getY() + prop.getHeight()) {
+                prop.islive = false;
+                Random r = new Random();
+                int rnum = r.nextInt(100);//rnum%2==1
+                if(rnum%2==1){
+                    for(int i=0;i<enemyTanks.size();i++){
+                        EnemyTank enemyTank=enemyTanks.get(i);
+                        enemyTank.setSpeed(1);
+                        for(int j=0;j<enemyTank.shots.size();j++){
+                            Shot shot=enemyTank.shots.get(j);
+                            shot.speed=1;
+                        }
+                    }
                 }
-                break;
-            case 1:
-            case 3:
-                if (s.x > enemyTank.getX() && s.x < enemyTank.getX() +60
-                    && s.y > enemyTank.getY() && s.y < enemyTank.getY() +40){
-                    s.islive = false;
-                    enemyTank.islive = false;
-                    enemyTanks.remove(enemyTank);
-                    Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
-                    bombs.add(bomb);
+                else{
+                    for(int i=0;i<enemyTanks.size()/2;i++){
+                        EnemyTank enemyTank=enemyTanks.get(i);
+                        enemyTank.islive=false;
+                        enemyTanks.remove(enemyTank);
+                        Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
+                        bombs.add(bomb);
+                    }
                 }
-                break;
+
+            }
         }
     }
 
@@ -345,7 +318,6 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     public void keyTyped(KeyEvent e) {
 
     }
-
     @Override
     public void keyPressed(KeyEvent e) {
         if(hero.islive == false)return;
@@ -375,28 +347,25 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
         }
         this.repaint();
     }
-
     @Override
     public void keyReleased(KeyEvent e) {
 
     }
-
     @Override
     public void run() {
-        while (true) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            this.repaint();
-            hitEnemyTank();     //不停的检查是否打中了
-            hitHero();
-            hitSteel();
-            hitWall();
-//            if(hero.islive==false) {
-//                return;
-//            }
-        }
+
+    }
+    public void gameOver() {
+        //如果游戏结束了，调用接口的gameOver()方法
+        gameEndListener.gameOver();
+    }
+    //回到开始页面
+    public void goHome() {
+        gameEndListener.goHome();
+    }
+
+    //添加一个设置gameEndListener的方法
+    public void setGameEndListener(GameEndListener listener) {
+        this.gameEndListener = listener;
     }
 }
