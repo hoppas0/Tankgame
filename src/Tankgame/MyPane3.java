@@ -1,5 +1,4 @@
 package Tankgame;
-//绘图区域
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

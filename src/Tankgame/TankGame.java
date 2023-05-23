@@ -7,7 +7,6 @@ public class TankGame extends JFrame {
         MyPane1 mp1 =new MyPane1();    //第一关
         MyPane2 mp2 =new MyPane2();    //第二关
         MyPane3 mp3 =new MyPane3();    //第三关
-
         //设置第一关的游戏结束监听器
         mp1.setGameEndListener(new GameEndListener() {
             @Override
@@ -25,7 +24,6 @@ public class TankGame extends JFrame {
                 dispose();
             }
         });
-
         //设置第二关的游戏结束监听器
         mp2.setGameEndListener(new GameEndListener() {
             @Override
@@ -57,24 +55,20 @@ public class TankGame extends JFrame {
                 TankGame.this.addKeyListener(mp1);
                 TankGame.this.setVisible(true);
             }
-
             @Override
             public void goHome() {
                 new HomePage();
                 dispose();
             }
         });
-
         //添加第一关的游戏绘图区域
         this.add(mp1);
         Thread thread1 = new Thread(mp1);
         thread1.start();
-
         //设置窗口大小、监听器和关闭操作
         this.setSize(950, 950);
         this.addKeyListener(mp1);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-
     }
 }

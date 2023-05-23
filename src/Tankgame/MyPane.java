@@ -1,10 +1,7 @@
 package Tankgame;
-//绘图区域
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 @SuppressWarnings("all")
@@ -28,7 +25,6 @@ public class MyPane extends JPanel{
     public void paint(Graphics g) {
         super.paint(g);
     }
-
     public void drawBase(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
     }
@@ -45,7 +41,6 @@ public class MyPane extends JPanel{
             }
         }
     }
-
     public void drawWall(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
     }
@@ -68,7 +63,6 @@ public class MyPane extends JPanel{
             drawSteel(steel.getImage(),steel.getX(),steel.getY(),steel.getWidth(),steel.getHeight(),g);
         }
     }
-
     public void drawRiver(int X,int Y,int width,int height,Graphics g){
         g.setColor(Color.BLUE);
         g.fill3DRect(X, Y,width,height,false);
@@ -320,7 +314,6 @@ public class MyPane extends JPanel{
     public void goHome() {
         gameEndListener.goHome();
     }
-
     //添加一个设置gameEndListener的方法
     public void setGameEndListener(GameEndListener listener) {
         this.gameEndListener = listener;
