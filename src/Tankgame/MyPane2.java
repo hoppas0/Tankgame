@@ -7,9 +7,6 @@ import java.awt.event.KeyListener;
 import java.util.Random;
 @SuppressWarnings("all")
 public class MyPane2 extends MyPane implements KeyListener ,Runnable{
-    Image wallimage=Toolkit.getDefaultToolkit().getImage("images/walls.gif");
-    Image steelimage=Toolkit.getDefaultToolkit().getImage("images/steel.png");
-    Image baseimage=Toolkit.getDefaultToolkit().getImage("images/star.gif");
     public MyPane2(){
         hero = new Hero(10+(70*6),5+70*10);//初始化自己的坦克
         hero.setEnemyTanks(enemyTanks);
@@ -51,57 +48,57 @@ public class MyPane2 extends MyPane implements KeyListener ,Runnable{
             new Thread(shot).start();
             enemyTanks.add(enemyTank);
         }
-        bases.add(new Base(baseimage,70*6,70*12,70,70));
+        bases.add(new Base(70*6,70*12,70,70));
 
-        walls.add(new Wall(wallimage,70*5,70*12,70,70));
-        walls.add(new Wall(wallimage,70*7,70*12,70,70));
-        walls.add(new Wall(wallimage,70*5,70*11,70,70));
-        walls.add(new Wall(wallimage,70*6,70*11,70,70));
-        walls.add(new Wall(wallimage,70*7,70*11,70,70));
+        walls.add(new Wall(70*5,70*12,70,70));
+        walls.add(new Wall(70*7,70*12,70,70));
+        walls.add(new Wall(70*5,70*11,70,70));
+        walls.add(new Wall(70*6,70*11,70,70));
+        walls.add(new Wall(70*7,70*11,70,70));
 
-        walls.add(new Wall(wallimage,70*1,70*2,70,70));
-        walls.add(new Wall(wallimage,70*2,70*2,70,70));
-        walls.add(new Wall(wallimage,70*3,70*2,70,70));
-        walls.add(new Wall(wallimage,70*3,70*3,70,70));
-        walls.add(new Wall(wallimage,70*3,70*4,70,70));
-        walls.add(new Wall(wallimage,70*2,70*4,70,70));
-        walls.add(new Wall(wallimage,70*1,70*4,70,70));
+        walls.add(new Wall(70*1,70*2,70,70));
+        walls.add(new Wall(70*2,70*2,70,70));
+        walls.add(new Wall(70*3,70*2,70,70));
+        walls.add(new Wall(70*3,70*3,70,70));
+        walls.add(new Wall(70*3,70*4,70,70));
+        walls.add(new Wall(70*2,70*4,70,70));
+        walls.add(new Wall(70*1,70*4,70,70));
 
-        walls.add(new Wall(wallimage,70*1,70*8,70,70));
-        walls.add(new Wall(wallimage,70*2,70*8,70,70));
-        walls.add(new Wall(wallimage,70*3,70*8,70,70));
-        walls.add(new Wall(wallimage,70*3,70*9,70,70));
-        walls.add(new Wall(wallimage,70*3,70*10,70,70));
-        walls.add(new Wall(wallimage,70*2,70*10,70,70));
-        walls.add(new Wall(wallimage,70*1,70*10,70,70));
+        walls.add(new Wall(70*1,70*8,70,70));
+        walls.add(new Wall(70*2,70*8,70,70));
+        walls.add(new Wall(70*3,70*8,70,70));
+        walls.add(new Wall(70*3,70*9,70,70));
+        walls.add(new Wall(70*3,70*10,70,70));
+        walls.add(new Wall(70*2,70*10,70,70));
+        walls.add(new Wall(70*1,70*10,70,70));
 
-        walls.add(new Wall(wallimage,70*11,70*2,70,70));
-        walls.add(new Wall(wallimage,70*10,70*2,70,70));
-        walls.add(new Wall(wallimage,70*9,70*2,70,70));
-        walls.add(new Wall(wallimage,70*9,70*3,70,70));
-        walls.add(new Wall(wallimage,70*9,70*4,70,70));
-        walls.add(new Wall(wallimage,70*10,70*4,70,70));
-        walls.add(new Wall(wallimage,70*11,70*4,70,70));
+        walls.add(new Wall(70*11,70*2,70,70));
+        walls.add(new Wall(70*10,70*2,70,70));
+        walls.add(new Wall(70*9,70*2,70,70));
+        walls.add(new Wall(70*9,70*3,70,70));
+        walls.add(new Wall(70*9,70*4,70,70));
+        walls.add(new Wall(70*10,70*4,70,70));
+        walls.add(new Wall(70*11,70*4,70,70));
 
-        walls.add(new Wall(wallimage,70*11,70*8,70,70));
-        walls.add(new Wall(wallimage,70*10,70*8,70,70));
-        walls.add(new Wall(wallimage,70*9,70*8,70,70));
-        walls.add(new Wall(wallimage,70*9,70*9,70,70));
-        walls.add(new Wall(wallimage,70*9,70*10,70,70));
-        walls.add(new Wall(wallimage,70*10,70*10,70,70));
-        walls.add(new Wall(wallimage,70*11,70*10,70,70));
+        walls.add(new Wall(70*11,70*8,70,70));
+        walls.add(new Wall(70*10,70*8,70,70));
+        walls.add(new Wall(70*9,70*8,70,70));
+        walls.add(new Wall(70*9,70*9,70,70));
+        walls.add(new Wall(70*9,70*10,70,70));
+        walls.add(new Wall(70*10,70*10,70,70));
+        walls.add(new Wall(70*11,70*10,70,70));
         for(int i =0;i<3;i++){      //初始化所有的钢板
-            Steel steel0 = new Steel(steelimage,70*6,70*3,70,70);
+            Steel steel0 = new Steel(70*6,70*3,70,70);
             steels.add(steel0);
-            Steel steel1 = new Steel(steelimage,70*5,70*6,70,70);
+            Steel steel1 = new Steel(70*5,70*6,70,70);
             steels.add(steel1);
-            Steel steel2 = new Steel(steelimage,70*7,70*6,70,70);
+            Steel steel2 = new Steel(70*7,70*6,70,70);
             steels.add(steel2);
-            Steel steel3 = new Steel(steelimage,70*6,70*8,70,70);
+            Steel steel3 = new Steel(70*6,70*8,70,70);
             steels.add(steel3);
         }
-        steels.add(new Steel(steelimage,70*5,70*8,70,70));
-        steels.add(new Steel(steelimage,70*7,70*8,70,70));
+        steels.add(new Steel(70*5,70*8,70,70));
+        steels.add(new Steel(70*7,70*8,70,70));
 
         rivers.add(new River(70*1,70*6,70,70));
         rivers.add(new River(70*2,70*6,70,70));
@@ -139,13 +136,13 @@ public class MyPane2 extends MyPane implements KeyListener ,Runnable{
         //画出基地
         Base base=bases.get(0);
         drawBase(base.getImage(),base.getX(),base.getY(),base.getWidth(),base.getHeight(),g);
-        drawWalls(walls,g);
-        drawSteels(steels,g);
-        drawRivers(rivers,g);
-        drawProps(props,g);
-        drawHero(hero,g);
-        drawEnemyTanks(enemyTanks,g);
-        drawBombs(bombs,g);
+        drawWalls(g);
+        drawSteels(g);
+        drawRivers(g);
+        drawProps(g);
+        drawHero(g);
+        drawEnemyTanks(g);
+        drawBombs(g);
     }
     @Override
     public void keyTyped(KeyEvent e) {
@@ -195,12 +192,12 @@ public class MyPane2 extends MyPane implements KeyListener ,Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            hitEnemyTank(bombs,hero,enemyTanks);     //不停的检查是否打中了
-            hitHero(bombs,hero,enemyTanks);
-            hitSteel(steels,hero,enemyTanks);
-            hitWall(walls,hero,enemyTanks);
-            hitbase( bases,hero,enemyTanks);
-            getprop(props,bombs,hero,enemyTanks);
+            hitEnemyTank();     //不停的检查是否打中了
+            hitHero();
+            hitSteel();
+            hitWall();
+            hitbase();
+            getprop();
             this.repaint();
             if(hero.islive==false) {
                 try {

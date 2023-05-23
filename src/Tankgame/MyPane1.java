@@ -30,41 +30,25 @@ public class MyPane1 extends MyPane implements KeyListener ,Runnable{
         for(int i = 0;i<10;i++){     //初始化所有的墙
             if(i==4 || i==6)continue;
             if(i == 5){
-                Wall wall0 = new Wall(70*2,70*(i+1),70,70);
-                walls.add(wall0);
-                Wall wall1 = new Wall(70*3,70*(i+1),70,70);
-                walls.add(wall1);
-                Wall wall2 = new Wall(70*5,70*(i+1),70,70);
-                walls.add(wall2);
-                Wall wall3 = new Wall(70*7,70*(i+1),70,70);
-                walls.add(wall3);
-                Wall wall4 = new Wall(70*9,70*(i+1),70,70);
-                walls.add(wall4);
-                Wall wall5 = new Wall(70*10,70*(i+1),70,70);
-                walls.add(wall5);
+                walls.add(new Wall(70*2,70*(i+1),70,70));
+                walls.add(new Wall(70*3,70*(i+1),70,70));
+                walls.add(new Wall(70*5,70*(i+1),70,70));
+                walls.add(new Wall(70*7,70*(i+1),70,70));
+                walls.add(new Wall(70*9,70*(i+1),70,70));
+                walls.add(new Wall(70*10,70*(i+1),70,70));
             }
-            Wall wall0 = new Wall(70*1,70*(i+1),70,70);
-            walls.add(wall0);
-            Wall wall1 = new Wall(70*3,70*(i+1),70,70);
-            walls.add(wall1);
-            Wall wall2 = new Wall(70*5,70*(i+1),70,70);
-            walls.add(wall2);
-            Wall wall3 = new Wall(70*7,70*(i+1),70,70);
-            walls.add(wall3);
-            Wall wall4 = new Wall(70*9,70*(i+1),70,70);
-            walls.add(wall4);
-            Wall wall5 = new Wall(70*11,70*(i+1),70,70);
-            walls.add(wall5);
+            walls.add(new Wall(70*1,70*(i+1),70,70));
+            walls.add(new Wall(70*3,70*(i+1),70,70));
+            walls.add(new Wall(70*5,70*(i+1),70,70));
+            walls.add(new Wall(70*7,70*(i+1),70,70));
+            walls.add(new Wall(70*9,70*(i+1),70,70));
+            walls.add(new Wall(70*11,70*(i+1),70,70));
         }
         for(int i =0;i<3;i++){      //初始化所有的钢板
-            Steel steel0 = new Steel(70*6,70*3,70,70);
-            steels.add(steel0);
-            Steel steel1 = new Steel(0,70*6,70,70);
-            steels.add(steel1);
-            Steel steel2 = new Steel(70*12,70*6,70,70);
-            steels.add(steel2);
-            Steel steel3 = new Steel(70*6,70*8,70,70);
-            steels.add(steel3);
+            steels.add(new Steel(70*6,70*3,70,70));
+            steels.add(new Steel(0,70*6,70,70));
+            steels.add(new Steel(70*12,70*6,70,70));
+            steels.add(new Steel(70*6,70*8,70,70));
         }
         props.add(new Prop(70*6,70*9,70,70));
     }
@@ -93,12 +77,12 @@ public class MyPane1 extends MyPane implements KeyListener ,Runnable{
             }
             gameOver();
         }
-        drawWalls(walls,g);         //画出所有墙
-        drawSteels(steels,g);       //画出所有钢板
-        drawProps(props,g);        //画出所有道具
-        drawHero(hero,g);           //画出玩家
-        drawEnemyTanks(enemyTanks,g);//画出所有敌人
-        drawBombs(bombs,g);         //画出爆炸效果
+        drawWalls(g);         //画出所有墙
+        drawSteels(g);       //画出所有钢板
+        drawProps(g);        //画出所有道具
+        drawHero(g);           //画出玩家
+        drawEnemyTanks(g);//画出所有敌人
+        drawBombs(g);         //画出爆炸效果
     }
 
     @Override
@@ -149,11 +133,11 @@ public class MyPane1 extends MyPane implements KeyListener ,Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            hitEnemyTank(bombs,hero,enemyTanks);     //不停的检查是否打中了
-            hitHero(bombs,hero,enemyTanks);
-            hitSteel(steels,hero,enemyTanks);
-            hitWall(walls,hero,enemyTanks);
-            getprop(props,bombs,hero,enemyTanks);
+            hitEnemyTank();     //不停的检查是否打中了
+            hitHero();
+            hitSteel();
+            hitWall();
+            getprop();
             this.repaint();
             if(hero.islive==false) {
                 try {

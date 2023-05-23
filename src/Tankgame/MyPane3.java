@@ -9,10 +9,6 @@ import java.util.Random;
 public class MyPane3 extends MyPane implements KeyListener ,Runnable{
     int positionx[]={70*1,70*11,70*1,70*11};
     int positiony[]={70*6,70*6,70*11,70*11};
-    Image wallimage=Toolkit.getDefaultToolkit().getImage("images/walls.gif");
-    Image steelimage=Toolkit.getDefaultToolkit().getImage("images/steel.png");
-    Image baseimage=Toolkit.getDefaultToolkit().getImage("images/star.gif");
-    Image propimage=Toolkit.getDefaultToolkit().getImage("images/img.png");
     public MyPane3(){
         hero = new Hero(5+(70*6),5+70*11);//初始化自己的坦克
         hero.setEnemyTanks(enemyTanks);
@@ -53,37 +49,37 @@ public class MyPane3 extends MyPane implements KeyListener ,Runnable{
             enemyTanks.add(enemyTank);
         }
 
-        bases.add(new Base(baseimage,70*6,70*6,70,70));
+        bases.add(new Base(70*6,70*6,70,70));
         //bases.add(new Base(baseimage,70*6,70*3,70,70));
-        props.add(new Prop(propimage,70*6,70*2,70,70));
+        props.add(new Prop(70*6,70*2,70,70));
 
         for(int i=5;i<=7;i++){
-            walls.add(new Wall(wallimage,70*i,70*5,70,70));
-            walls.add(new Wall(wallimage,70*i,70*6,70,70));
+            walls.add(new Wall(70*i,70*5,70,70));
+            walls.add(new Wall(70*i,70*6,70,70));
             if(i==6){
                 walls.removeElementAt(4);
             }
-            walls.add(new Wall(wallimage,70*i,70*7,70,70));
+            walls.add(new Wall(70*i,70*7,70,70));
         }
 
 
-        steels.add(new Steel(steelimage,70*6,70*3,70,70));
+        steels.add(new Steel(70*6,70*3,70,70));
 
-        steels.add(new Steel(steelimage,70*3,70*3,70,70));
-        steels.add(new Steel(steelimage,70*2,70*3,70,70));
-        steels.add(new Steel(steelimage,70*3,70*4,70,70));
+        steels.add(new Steel(70*3,70*3,70,70));
+        steels.add(new Steel(70*2,70*3,70,70));
+        steels.add(new Steel(70*3,70*4,70,70));
 
-        steels.add(new Steel(steelimage,70*9,70*3,70,70));
-        steels.add(new Steel(steelimage,70*10,70*3,70,70));
-        steels.add(new Steel(steelimage,70*9,70*4,70,70));
+        steels.add(new Steel(70*9,70*3,70,70));
+        steels.add(new Steel(70*10,70*3,70,70));
+        steels.add(new Steel(70*9,70*4,70,70));
 
-        steels.add(new Steel(steelimage,70*3,70*8,70,70));
-        steels.add(new Steel(steelimage,70*2,70*9,70,70));
-        steels.add(new Steel(steelimage,70*3,70*9,70,70));
+        steels.add(new Steel(70*3,70*8,70,70));
+        steels.add(new Steel(70*2,70*9,70,70));
+        steels.add(new Steel(70*3,70*9,70,70));
 
-        steels.add(new Steel(steelimage,70*9,70*8,70,70));
-        steels.add(new Steel(steelimage,70*10,70*9,70,70));
-        steels.add(new Steel(steelimage,70*9,70*9,70,70));
+        steels.add(new Steel(70*9,70*8,70,70));
+        steels.add(new Steel(70*10,70*9,70,70));
+        steels.add(new Steel(70*9,70*9,70,70));
 
         for(int i=4;i<=8;i++){
             rivers.add(new River(70*i,70*9,70,70));
@@ -121,13 +117,13 @@ public class MyPane3 extends MyPane implements KeyListener ,Runnable{
        //画出基地
         Base base=bases.get(0);
         drawBase(base.getImage(),base.getX(),base.getY(),base.getWidth(),base.getHeight(),g);
-        drawWalls(walls,g);
-        drawSteels(steels,g);
-        drawRivers(rivers,g);
-        drawProps(props,g);
-        drawHero(hero,g);
-        drawEnemyTanks(enemyTanks,g);
-        drawBombs(bombs,g);
+        drawWalls(g);
+        drawSteels(g);
+        drawRivers(g);
+        drawProps(g);
+        drawHero(g);
+        drawEnemyTanks(g);
+        drawBombs(g);
     }
     @Override
     public void keyTyped(KeyEvent e) {
@@ -177,12 +173,12 @@ public class MyPane3 extends MyPane implements KeyListener ,Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            hitEnemyTank(bombs,hero,enemyTanks);     //不停的检查是否打中了
-            hitHero(bombs,hero,enemyTanks);
-            hitSteel(steels,hero,enemyTanks);
-            hitWall(walls,hero,enemyTanks);
-            hitbase( bases,hero,enemyTanks);
-            getprop(props,bombs,hero,enemyTanks);
+            hitEnemyTank();     //不停的检查是否打中了
+            hitHero();
+            hitSteel();
+            hitWall();
+            hitbase();
+            getprop();
             this.repaint();
             if(hero.islive==false || enemyTanks.size() == 0) {
                 try {

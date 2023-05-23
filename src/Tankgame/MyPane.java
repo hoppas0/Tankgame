@@ -8,7 +8,7 @@ import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 @SuppressWarnings("all")
-public class MyPane extends JPanel implements KeyListener ,Runnable{
+public class MyPane extends JPanel{
     private GameEndListener gameEndListener;
     Hero hero = null;
     Vector<EnemyTank> enemyTanks = new Vector<>();
@@ -35,7 +35,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     public void drawProp(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
     }
-    public void drawProps(Vector<Prop> props,Graphics g){
+    public void drawProps(Graphics g){
         if(props.size()>0){
             Prop prop=props.get(0);
             if(prop.islive){
@@ -49,7 +49,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     public void drawWall(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
     }
-    public void drawWalls(Vector<Wall> walls,Graphics g){
+    public void drawWalls(Graphics g){
         for(int i = 0;i<walls.size();i++){      //画出所有的墙
             Wall wall = walls.get(i);
             if(wall.islive) {
@@ -62,7 +62,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
     public void drawSteel(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
     }
-    public void drawSteels(Vector<Steel> steels,Graphics g){
+    public void drawSteels(Graphics g){
         for(int i = 0;i<steels.size();i++){     //画出所有的钢板
             Steel steel=steels.get(i);
             drawSteel(steel.getImage(),steel.getX(),steel.getY(),steel.getWidth(),steel.getHeight(),g);
@@ -73,7 +73,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
         g.setColor(Color.BLUE);
         g.fill3DRect(X, Y,width,height,false);
     }
-    public void drawRivers(Vector<River> rivers,Graphics g){
+    public void drawRivers(Graphics g){
         for(int i=0;i<rivers.size();i++){       //画出所有的河
             River river = rivers.get(i);
             drawRiver(river.getX(),river.getY(),river.getWidth(),river.getHeight(),g);
@@ -122,7 +122,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 System.out.println("暂时没有处理 ");
         }
     }
-    public void drawHero(Hero hero,Graphics g){
+    public void drawHero(Graphics g){
         if (hero != null && hero.islive) {      //画出玩家
             drawTank(hero.getX(), hero.getY(), g, hero.getDirect(), 0);
         }
@@ -135,7 +135,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void drawEnemyTanks(Vector<EnemyTank> enemyTanks,Graphics g){
+    public void drawEnemyTanks(Graphics g){
         for (int i = 0; i < enemyTanks.size(); i++) {
             EnemyTank enemyTank = enemyTanks.get(i);
             if (enemyTank.islive) {
@@ -151,7 +151,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void drawBombs(Vector<Bomb> bombs,Graphics g){
+    public void drawBombs(Graphics g){
         for (int i = 0; i < bombs.size(); i++) {
             Bomb bomb = bombs.get(i);
             if (bomb.life > 6){
@@ -167,7 +167,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void hitEnemyTank(Vector<Bomb> bombs,Hero hero,Vector<EnemyTank> enemyTanks){
+    public void hitEnemyTank(){
         for(int i =0;i<hero.shots.size();i++) {
             Shot shot = hero.shots.get(i);
             if (shot.islive) {
@@ -178,7 +178,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void hitHero(Vector<Bomb> bombs,Hero hero,Vector<EnemyTank> enemyTanks){
+    public void hitHero(){
         for (int i = 0; i < enemyTanks.size(); i++) {
             EnemyTank enemyTank = enemyTanks.get(i);
             for (int j = 0; j < enemyTank.shots.size(); j++) {
@@ -215,7 +215,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
                 break;
         }
     }
-    public void hitbase(Vector<Base> bases,Hero hero,Vector<EnemyTank> enemyTanks){
+    public void hitbase(){
         for(int ba=0;ba<bases.size();ba++){
             Base base = bases.get(ba);
             for(int i=0;i<enemyTanks.size();i++){       //若是敌人打基地
@@ -230,8 +230,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-
-    public void hitSteel(Vector<Steel> steels,Hero hero,Vector<EnemyTank> enemyTanks){
+    public void hitSteel(){
         for(int stl=0;stl<steels.size();stl++){
             Steel steel = steels.get(stl);
             for(int i=0;i<enemyTanks.size();i++){       //若是敌人打钢板
@@ -255,7 +254,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void hitWall(Vector<Wall> walls,Hero hero,Vector<EnemyTank> enemyTanks){
+    public void hitWall(){
         for(int w = 0;w<walls.size();w++){
             Wall wall = walls.get(w);
             for(int i=0;i<enemyTanks.size();i++){       //若是敌人打墙
@@ -281,7 +280,7 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
             }
         }
     }
-    public void getprop(Vector<Prop> props,Vector<Bomb> bombs,Hero hero,Vector<EnemyTank> enemyTanks){
+    public void getprop(){
         if(props.size()>0){
             Tank s=hero;
             Prop prop=props.get(0);
@@ -312,48 +311,6 @@ public class MyPane extends JPanel implements KeyListener ,Runnable{
 
             }
         }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if(hero.islive == false)return;
-        if (e.getKeyCode() == KeyEvent.VK_W){
-            hero.setDirect(0);
-            if (hero.getY() > 0 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
-                hero.moveUp();
-            }
-        }else if (e.getKeyCode() == KeyEvent.VK_D){
-            hero.setDirect(1);
-            if (hero.getX()+60 < 70*13 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
-                hero.moveRight();
-            }
-        }else if (e.getKeyCode() == KeyEvent.VK_S){
-            hero.setDirect(2);
-            if (hero.getY() + 60 < 70*13 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
-                hero.moveDown();
-            }
-        }else if (e.getKeyCode() == KeyEvent.VK_A){
-            hero.setDirect(3);
-            if (hero.getX() > 0 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
-                hero.moveLeft();
-            }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_J){
-            hero.shotEnemyTank();
-        }
-        this.repaint();
-    }
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-    @Override
-    public void run() {
-
     }
     public void gameOver() {
         //如果游戏结束了，调用接口的gameOver()方法
