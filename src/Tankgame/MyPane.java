@@ -2,10 +2,12 @@ package Tankgame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
 import java.util.Vector;
 @SuppressWarnings("all")
-public class MyPane extends JPanel{
+public class MyPane extends JPanel implements KeyListener,Runnable {
     private GameEndListener gameEndListener;
     Hero hero = null;
     Vector<EnemyTank> enemyTanks = new Vector<>();
@@ -24,6 +26,45 @@ public class MyPane extends JPanel{
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        g.fillRect(0,0,910,910);//填充矩形，默认黑色,把70*70看作一个基本的单元，所以长和宽要设置成能够整除70的数,910*910能放13*13个单元
+        if(hero.islive==false){         //如果玩家死亡
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Font font = new Font("Serif", Font.PLAIN, 56);
+            g.setFont(font);
+            g.setColor(Color.red);
+            g.drawString("DEFEAT",70*4,70*4);
+            return;
+        }
+        if(enemyTanks.size()==0){       //如果敌人全部被消灭
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(Thread.currentThread().getName() != "stage-3"){
+                Font font = new Font("Serif", Font.PLAIN, 56);
+                g.setFont(font);
+                g.setColor(Color.red);
+                g.drawString("VICTORY",70*4,70*4);
+            }
+            return;
+        }
+        //画出基地
+        if(bases.size()!=0){
+            Base base=bases.get(0);
+            drawBase(base.getImage(),base.getX(),base.getY(),base.getWidth(),base.getHeight(),g);
+        }
+        drawWalls(g);
+        drawSteels(g);
+        drawRivers(g);
+        drawProps(g);
+        drawHero(g);
+        drawEnemyTanks(g);
+        drawBombs(g);
     }
     public void drawBase(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
@@ -32,19 +73,22 @@ public class MyPane extends JPanel{
         g.drawImage(image,X,Y,width,height,null);
     }
     public void drawProps(Graphics g){
-        if(props.size()>0){
-            Prop prop=props.get(0);
+        if(props.size()==0)return;
+        for (int i=0;i<props.size();i++){
+            Prop prop=props.get(i);
             if(prop.islive){
                 drawProp(prop.getImage(),prop.getX(),prop.getY(),prop.getWidth(),prop.getHeight(),g);
             }else{
                 props.remove(prop);
             }
         }
+
     }
     public void drawWall(Image image,int X, int Y, int width, int height, Graphics g){
         g.drawImage(image,X,Y,width,height,null);
     }
     public void drawWalls(Graphics g){
+        if(walls.size()==0)return;
         for(int i = 0;i<walls.size();i++){      //画出所有的墙
             Wall wall = walls.get(i);
             if(wall.islive) {
@@ -58,22 +102,22 @@ public class MyPane extends JPanel{
         g.drawImage(image,X,Y,width,height,null);
     }
     public void drawSteels(Graphics g){
+        if(steels.size()==0)return;
         for(int i = 0;i<steels.size();i++){     //画出所有的钢板
             Steel steel=steels.get(i);
             drawSteel(steel.getImage(),steel.getX(),steel.getY(),steel.getWidth(),steel.getHeight(),g);
         }
     }
-    public void drawRiver(int X,int Y,int width,int height,Graphics g){
-        g.setColor(Color.BLUE);
-        g.fill3DRect(X, Y,width,height,false);
+    public void drawRiver(Image image,int X,int Y,int width,int height,Graphics g){
+        g.drawImage(image,X,Y,width,height,null);
     }
     public void drawRivers(Graphics g){
+        if(rivers.size()==0)return;
         for(int i=0;i<rivers.size();i++){       //画出所有的河
             River river = rivers.get(i);
-            drawRiver(river.getX(),river.getY(),river.getWidth(),river.getHeight(),g);
+            drawRiver(river.getImage(),river.getX(),river.getY(),river.getWidth(),river.getHeight(),g);
         }
     }
-
     public void drawTank(int X,int Y,Graphics g,int direct,int type){
         switch (type){
             case 0:
@@ -276,14 +320,19 @@ public class MyPane extends JPanel{
     }
     public void getprop(){
         if(props.size()>0){
-            Tank s=hero;
-            Prop prop=props.get(0);
-            if (s.getX() >= prop.getX() && s.getX() <= prop.getX() + prop.getWidth()
-                    && s.getY() >= prop.getY() && s.getY()<= prop.getY() + prop.getHeight()) {
-                prop.islive = false;
-                Random r = new Random();
-                int rnum = r.nextInt(100);//rnum%2==1
-                if(rnum%2==1){
+            Prop prop=hero.isTouchProp();
+            if(prop != null){
+                if(prop.getType()==1){          //1是手榴弹
+                    int n=enemyTanks.size();
+                    for(int i=0;i<n-1;i++){
+                        EnemyTank enemyTank=enemyTanks.get(0);
+                        enemyTank.islive=false;
+                        enemyTanks.remove(enemyTank);
+                        Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
+                        bombs.add(bomb);
+                    }
+                }
+                if(prop.getType()==2){          //2是时钟
                     for(int i=0;i<enemyTanks.size();i++){
                         EnemyTank enemyTank=enemyTanks.get(i);
                         enemyTank.setSpeed(1);
@@ -293,16 +342,111 @@ public class MyPane extends JPanel{
                         }
                     }
                 }
-                else{
-                    for(int i=0;i<enemyTanks.size()/2;i++){
-                        EnemyTank enemyTank=enemyTanks.get(i);
-                        enemyTank.islive=false;
-                        enemyTanks.remove(enemyTank);
-                        Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
-                        bombs.add(bomb);
-                    }
-                }
+                prop.islive = false;
+            }
+//            for(int k=0;k<props.size();k++){
+//                Prop prop=props.get(k);
+//                if (hero.getX() >= prop.getX() && hero.getX() <= prop.getX() + prop.getWidth()
+//                        && hero.getY() >= prop.getY() && hero.getY()<= prop.getY() + prop.getHeight()) {
+//                    if(prop.getType()==1){          //1是手榴弹
+//                        int n=enemyTanks.size();
+//                        for(int i=0;i<n-1;i++){
+//                            EnemyTank enemyTank=enemyTanks.get(0);
+//                            enemyTank.islive=false;
+//                            enemyTanks.remove(enemyTank);
+//                            Bomb bomb =new Bomb(enemyTank.getX(),enemyTank.getY());
+//                            bombs.add(bomb);
+//                        }
+//                    }
+//                    if(prop.getType()==2){          //2是时钟
+//                        for(int i=0;i<enemyTanks.size();i++){
+//                            EnemyTank enemyTank=enemyTanks.get(i);
+//                            enemyTank.setSpeed(1);
+//                            for(int j=0;j<enemyTank.shots.size();j++){
+//                                Shot shot=enemyTank.shots.get(j);
+//                                shot.speed=1;
+//                            }
+//                        }
+//                    }
+//                    prop.islive = false;
+//                }
+//            }
+        }
+    }
+    @Override
+    public void keyTyped(KeyEvent e) {
 
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(hero.islive == false)return;
+        if (e.getKeyCode() == KeyEvent.VK_W){
+            hero.setDirect(0);
+            if (hero.getY() > 0 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
+                hero.moveUp();
+            }
+        }else if (e.getKeyCode() == KeyEvent.VK_D){
+            hero.setDirect(1);
+            if (hero.getX()+60 < 70*13 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
+                hero.moveRight();
+            }
+        }else if (e.getKeyCode() == KeyEvent.VK_S){
+            hero.setDirect(2);
+            if (hero.getY() + 60 < 70*13 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
+                hero.moveDown();
+            }
+        }else if (e.getKeyCode() == KeyEvent.VK_A){
+            hero.setDirect(3);
+            if (hero.getX() > 0 && !hero.isTouchEnemyTank() && !hero.isTouchBuilding()) {
+                hero.moveLeft();
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_J){
+            hero.shotEnemyTank();
+        }
+        this.repaint();
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            hitEnemyTank();     //不停的检查是否打中了
+            hitHero();
+            hitSteel();
+            hitWall();
+            hitbase();
+            getprop();
+            this.repaint();
+            if(hero.islive==false) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                goHome();
+                return;
+            }
+            if(hero.islive==true && enemyTanks.size()==0){
+                if (Thread.currentThread().getName()=="stage-3") {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    goHome();
+                }else {
+                    gameOver();
+                }
+                return;
             }
         }
     }

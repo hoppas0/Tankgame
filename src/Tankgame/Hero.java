@@ -10,9 +10,14 @@ public class Hero extends Tank {
     }
     Vector<Shot> shots = new Vector<>();
     Vector<EnemyTank> enemyTanks = new Vector<>();
+    Vector<Prop> props = new Vector<>();
 
     public void setEnemyTanks(Vector<EnemyTank> enemyTanks) {
         this.enemyTanks = enemyTanks;
+    }
+
+    public void setProps(Vector<Prop> props) {
+        this.props = props;
     }
 
     public void shotEnemyTank(){
@@ -186,5 +191,85 @@ public class Hero extends Tank {
         }
         return false;
     }
-
+    public Prop isTouchProp(){
+        switch (this.getDirect()){
+            case 0:
+                for(int i=0;i<props.size();i++){        //这里检测是否撞到了道具
+                    Prop prop = props.get(i);
+                    //若左上角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX() >= prop.getX()
+                            && this.getX() <= prop.getX() +prop.getWidth()
+                            && this.getY() >= prop.getY()
+                            && this.getY() <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                    //若右上角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX()+40 >= prop.getX()
+                            && this.getX()+40 <= prop.getX() +prop.getWidth()
+                            && this.getY() >= prop.getY()
+                            && this.getY() <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                }
+                break;
+            case 1:
+                for(int i=0;i<props.size();i++){
+                    Prop prop = props.get(i);
+                    //若左上角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX()+60 >= prop.getX()
+                            && this.getX()+60 <= prop.getX() +prop.getWidth()
+                            && this.getY() >= prop.getY()
+                            && this.getY() <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                    //若右下角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX()+60 >= prop.getX()
+                            && this.getX()+60 <= prop.getX() +prop.getWidth()
+                            && this.getY()+40 >= prop.getY()
+                            && this.getY()+40 <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                }
+                break;
+            case 2:
+                for(int i=0;i<props.size();i++){
+                    Prop prop = props.get(i);
+                    //若左下角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX() >= prop.getX()
+                            && this.getX() <= prop.getX() +prop.getWidth()
+                            && this.getY()+60 >= prop.getY()
+                            && this.getY()+60 <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                    //若右下角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX()+40 >= prop.getX()
+                            && this.getX()+40 <= prop.getX() +prop.getWidth()
+                            && this.getY()+60 >= prop.getY()
+                            && this.getY()+60 <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                }
+                break;
+            case 3:
+                for(int i=0;i<props.size();i++){
+                    Prop prop = props.get(i);
+                    //若左上角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX() >= prop.getX()
+                            && this.getX() <= prop.getX() +prop.getWidth()
+                            && this.getY() >= prop.getY()
+                            && this.getY() <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                    //若左下角点位于道具区域内，则证明已经发生了碰撞
+                    if(this.getX() >= prop.getX()
+                            && this.getX() <= prop.getX() +prop.getWidth()
+                            && this.getY()+40 >= prop.getY()
+                            && this.getY()+40 <= prop.getY() +prop.getHeight()){
+                        return prop;
+                    }
+                }
+                break;
+        }
+        return null;
+    }
 }

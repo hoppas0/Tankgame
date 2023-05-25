@@ -1,11 +1,15 @@
 package Tankgame;
 
+import java.awt.*;
+
 public class River {
     private int X;
     private int Y;
     private int Width;
     private int Height;
+    private Image mimage;
     public River(int x, int y, int width, int height){
+        mimage=Toolkit.getDefaultToolkit().getImage("images/water.png");;
         X=x;
         Y=y;
         Width=width;
@@ -42,5 +46,9 @@ public class River {
 
     public int getHeight() {
         return Height;
+    }
+
+    public Image getImage() {
+        return mimage;
     }
 }

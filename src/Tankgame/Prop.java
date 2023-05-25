@@ -4,8 +4,7 @@ import java.awt.*;
 
 /**
  * 道具
- * 50% 概率减速
- * 50% 消灭一半敌人
+ * 有手榴弹和时钟两种
  */
 public class Prop {
     private int X;
@@ -13,22 +12,36 @@ public class Prop {
     private Image mimage;
     private int Width;
     private int Height;
-
+    private int Type;       //1是手榴弹，2是时钟
     boolean islive = true;
 
-    public Prop(Image image,int x, int y, int width, int height) {
+    public Prop(Image image,int x, int y, int width, int height,int type) {
         mimage=image;
         X = x;
         Y = y;
         Width = width;
         Height = height;
+        Type=type;
     }
-    public Prop(int x, int y, int width, int height) {
-        mimage=Toolkit.getDefaultToolkit().getImage("images/img.png");
+    public Prop(int x, int y, int width, int height,int type) {
+        if(type==1){
+            mimage=Toolkit.getDefaultToolkit().getImage("images/grenade.png");
+        }else if(type==2){
+            mimage=Toolkit.getDefaultToolkit().getImage("images/timer.png");
+        }
         X = x;
         Y = y;
         Width = width;
         Height = height;
+        Type=type;
+    }
+    public Prop(int x, int y, int width, int height) {
+        mimage=Toolkit.getDefaultToolkit().getImage("images/grenade.png");
+        X = x;
+        Y = y;
+        Width = width;
+        Height = height;
+        Type=1;
     }
     public Image getImage(){
         return mimage;
@@ -47,5 +60,8 @@ public class Prop {
 
     public int getHeight() {
         return Height;
+    }
+    public int getType() {
+        return Type;
     }
 }

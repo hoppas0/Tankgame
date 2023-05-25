@@ -21,6 +21,14 @@ public class Shot implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if(speed==1){
+                try {
+                    Thread.sleep(10000);
+                    speed=10;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             switch (direct){
                 case 0:
                     y -= speed;

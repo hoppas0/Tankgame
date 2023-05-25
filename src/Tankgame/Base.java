@@ -22,7 +22,7 @@ public class Base {
         Height = height;
     }
     public Base(int x, int y, int width, int height) {
-        mimage=Toolkit.getDefaultToolkit().getImage("images/star.gif");
+        mimage=Toolkit.getDefaultToolkit().getImage("images/base.png");
         X = x;
         Y = y;
         Width = width;
